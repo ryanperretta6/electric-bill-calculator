@@ -11,7 +11,7 @@ import currencies from "../data/currencies";
 
 const Calculate = () => {
     const [deviceInputs, setDeviceInputs] = useState([]);
-    const [nextInputId, setNextInputId] = useState(1);
+    const [nextInputId, setNextInputId] = useState(0);
     const [selectedCurrency, setSelectedCurrency] = useState("USD");
     const [deviceInputData, setDeviceInputData] = useState([
         {
@@ -24,13 +24,37 @@ const Calculate = () => {
         },
     ]);
 
+    const cpyList = (list) => {
+        let newList = [];
+        for (let obj of list) {
+            newList.push(obj);
+        }
+        return newList;
+    };
+
     /**
      * Creates a new input set for a device
      */
     const handleAddDeviceInput = () => {
-        let newDeviceInputs = deviceInputs;
+        let newDeviceInputs = [];
         let newDeviceInputData = deviceInputData;
 
+        for (let deviceInput of deviceInputData) {
+            if (deviceInput.deviceInputId === -1) continue;
+            newDeviceInputs.push(
+                <DeviceInput
+                    first={false}
+                    num={deviceInput.deviceInputId}
+                    name={deviceInput.name}
+                    voltage={deviceInput.voltage}
+                    usage={deviceInput.usage}
+                    onDeviceInputNameChange={onDeviceInputNameChange}
+                    onDeviceInputVoltageChange={onDeviceInputVoltageChange}
+                    onDeviceInputUsageChange={onDeviceInputUsageChange}
+                    handleRemoveDeviceInput={handleRemoveDeviceInput}
+                />
+            );
+        }
         newDeviceInputData.push({
             deviceInputId: nextInputId,
             name: "",
@@ -54,8 +78,8 @@ const Calculate = () => {
         );
         setNextInputId(nextInputId + 1);
 
-        setDeviceInputs(newDeviceInputs.slice());
-        setDeviceInputData(newDeviceInputData.slice());
+        setDeviceInputs(newDeviceInputs);
+        setDeviceInputData(cpyList(newDeviceInputData));
     };
 
     /**
@@ -70,17 +94,13 @@ const Calculate = () => {
 
         const index = newDeviceInputData.indexOf(findDeviceInput(num));
 
-        console.log(index);
         console.log(num + " " + index);
 
         newDeviceInputs.splice(index, 1);
-        console.log(newDeviceInputs);
         newDeviceInputData.splice(index, 1);
 
-        setDeviceInputs(newDeviceInputs.slice());
-        setDeviceInputData(newDeviceInputData.slice());
-
-        console.log(deviceInputData);
+        setDeviceInputs(cpyList(newDeviceInputs));
+        setDeviceInputData(cpyList(newDeviceInputData));
     };
 
     /**
@@ -94,7 +114,7 @@ const Calculate = () => {
         const ind = newDeviceInputData.indexOf(findDeviceInput(num));
         newDeviceInputData[ind].name = event.target.value;
 
-        setDeviceInputData(newDeviceInputData.slice());
+        setDeviceInputData(cpyList(newDeviceInputData));
     };
 
     /**
@@ -108,7 +128,7 @@ const Calculate = () => {
         const ind = newDeviceInputData.indexOf(findDeviceInput(num));
         newDeviceInputData[ind].voltage = event.target.value;
 
-        setDeviceInputData(newDeviceInputData.slice());
+        setDeviceInputData(cpyList(newDeviceInputData));
     };
 
     /**
@@ -122,7 +142,7 @@ const Calculate = () => {
         const ind = newDeviceInputData.indexOf(findDeviceInput(num));
         newDeviceInputData[ind].usage = event.target.value;
 
-        setDeviceInputData(newDeviceInputData.slice());
+        setDeviceInputData(cpyList(newDeviceInputData));
     };
 
     /**
@@ -139,6 +159,7 @@ const Calculate = () => {
         for (let currDeviceInputData of deviceInputData) {
             if (currDeviceInputData.deviceInputId === deviceInputId) {
                 // get device input data
+                // console.log(currDeviceInputData);
                 return currDeviceInputData;
             }
         }
