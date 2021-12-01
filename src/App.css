@@ -77,8 +77,14 @@ h2 {
 
 #calculate-button {
     margin: 10px;
+    display: block;
 }
 
 .per {
     color: #afafaf;
+}
+
+#add-device {
+    display: inline;
+    margin: 10px;
 }

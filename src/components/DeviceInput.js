@@ -9,82 +9,33 @@ const DeviceInput = (props) => {
     const [selectedUnit, setSelectedUnit] = useState("hr");
     const [selectedPer, setSelectedPer] = useState("day");
 
-    const getNameTxtField = () => {
-        const onDeviceNameChange = (event) => {
-            setName(event.target.value);
-            props.onDeviceInputNameChange(event, props.num);
-        };
-        return name === "" ? (
-            <TextField
-                // labelId="device-input-label"
-                className="device-name-txtfld"
-                placeholder="Device Name"
-                onChange={onDeviceNameChange}
-            />
-        ) : (
+    return (
+        <div className="device-input" id={`${props.num}`}>
+            {/* <InputLabel id="device-name-label">Device Name</InputLabel> */}
             <TextField
                 // labelId="device-input-label"
                 className="device-name-txtfld"
                 placeholder="Device Name"
                 value={name}
-                onChange={onDeviceNameChange}
+                onChange={(event) => setName(event.target.value)}
             />
-        );
-    };
-
-    const getVoltageTxtField = () => {
-        const onVoltageChange = (event) => {
-            setVoltage(event.target.value);
-            props.onDeviceInputVoltageChange(event, props.num);
-        };
-        return voltage === 0 || voltage === "" ? (
             <TextField
                 className="device-voltage-txtfld"
                 type="number"
                 placeholder="Voltage"
-                onChange={onVoltageChange}
-            />
-        ) : (
-            <TextField
-                className="device-voltage-txtfld"
-                type="number"
                 value={voltage}
-                onChange={onVoltageChange}
+                onChange={(event) => setVoltage(event.target.value)}
             />
-        );
-    };
-
-    const getUsageTxtField = () => {
-        const onUsageChange = (event) => {
-            setUsage(event.target.value);
-            props.onDeviceInputUsageChange(event, props.num);
-        };
-        return usage === 0 || usage === "" ? (
-            <TextField
-                className="device-usage-txtfld"
-                type="number"
-                placeholder="Usage"
-                onChange={onUsageChange}
-            />
-        ) : (
+            <Typography variant="body1" component="p">
+                V
+            </Typography>
             <TextField
                 className="device-usage-txtfld"
                 type="number"
                 value={usage}
-                onChange={onUsageChange}
+                placeholder="Usage"
+                onChange={(event) => setUsage(event.target.value)}
             />
-        );
-    };
-
-    return (
-        <div className="device-input" id={`${props.num}`}>
-            {/* <InputLabel id="device-name-label">Device Name</InputLabel> */}
-            {getNameTxtField()}
-            {getVoltageTxtField()}
-            <Typography variant="body1" component="p">
-                V
-            </Typography>
-            {getUsageTxtField()}
             <Select
                 value={selectedUnit}
                 onChange={(event) => setSelectedUnit(event.target.value)}
@@ -103,16 +54,6 @@ const DeviceInput = (props) => {
                 <MenuItem value="week">{"Week"}</MenuItem>
                 <MenuItem value="month">{"Month"}</MenuItem>
             </Select>
-            {!props.first ? (
-                <Typography
-                    className="remove-device-input-button"
-                    variant="body1"
-                    component="p"
-                    onClick={() => props.handleRemoveDeviceInput(props.num)}
-                >
-                    remove
-                </Typography>
-            ) : null}
         </div>
     );
 };
