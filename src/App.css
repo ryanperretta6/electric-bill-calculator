@@ -1,0 +1,84 @@
+h1 {
+    color: #d9f0ff;
+    display: inline;
+}
+
+.pageTitle {
+    text-decoration: none;
+    display: inline;
+    margin: 20px;
+}
+
+.header {
+    background-color: #2f3061;
+}
+
+.navButton {
+    height: 5em;
+}
+
+.device-input {
+    display: inline;
+}
+.device-input * {
+    display: inline;
+    padding: 5px;
+    margin: 10px;
+}
+h2 {
+    text-decoration: underline;
+    color: #2f3061;
+}
+
+.device-name-txtfld {
+    width: 200px;
+}
+.device-voltage-txtfld {
+    width: 100px;
+}
+.device-usage-txtfld {
+    width: 100px;
+}
+
+#add-device {
+    color: #5c7aff;
+    font-family: "Rhodium Libre", sans-serif;
+    text-decoration: underline;
+    width: 130px;
+    margin-left: 40px;
+}
+#add-device:hover {
+    color: lime;
+    cursor: pointer;
+}
+#kwhr-txtfld {
+    padding: 10px;
+    width: 100px;
+}
+
+.remove-device-input-button {
+    color: rgb(255, 0, 64);
+    text-decoration: underline;
+    display: inline;
+}
+
+.remove-device-input-button:hover {
+    cursor: pointer;
+    color: rgb(255, 174, 0);
+}
+
+.navButtons a {
+    text-decoration: none;
+}
+
+.select {
+    width: 70px;
+}
+
+#calculate-button {
+    margin: 10px;
+}
+
+.per {
+    color: #afafaf;
+}
