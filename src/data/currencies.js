@@ -4,12 +4,24 @@ const currencies = [
         value: "USD",
     },
     {
-        symbol: "yen",
+        symbol: "¥",
         value: "YEN",
     },
     {
-        symbol: "euro",
+        symbol: "€",
         value: "EURO",
+    },
+    {
+        symbol: "£",
+        value: "POUND",
+    },
+    {
+        symbol: "₱",
+        value: "PESO",
+    },
+    {
+        symbol: "₹",
+        value: "RUPEE",
     },
 ];
 

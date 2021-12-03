@@ -8,7 +8,6 @@ import {
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import Home from "./components/Home";
 import Calculate from "./components/Calculate";
-import Results from "./components/Results";
 import "./App.css";
 
 const theme = createTheme({
@@ -77,7 +76,6 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Home />} />
                             <Route path="/calculate" element={<Calculate />} />
-                            <Route path="/results" element={<Results />} />
                         </Routes>
                     </div>
                 </div>

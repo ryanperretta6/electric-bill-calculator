@@ -1,13 +1,31 @@
 import { MenuItem, Select, TextField, Typography } from "@material-ui/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../App.css";
 
 const DeviceInput = (props) => {
-    const [name, setName] = useState(props.name !== "" ? props.name : "");
-    const [voltage, setVoltage] = useState(props.voltage);
-    const [usage, setUsage] = useState(props.usage);
+    const [name, setName] = useState("");
+    const [voltage, setVoltage] = useState(null);
+    const [usage, setUsage] = useState(null);
+    const [amps, setAmps] = useState(null);
     const [selectedUnit, setSelectedUnit] = useState("hr");
     const [selectedPer, setSelectedPer] = useState("day");
+
+    useEffect(
+        () =>
+            props.onChange(
+                {
+                    name,
+                    voltage,
+                    usage,
+                    amps,
+                    selectedUnit,
+                    selectedPer,
+                },
+                props.ind
+            ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [name, voltage, usage, amps, selectedUnit, selectedPer]
+    );
 
     return (
         <div className="device-input" id={`${props.num}`}>
@@ -28,6 +46,16 @@ const DeviceInput = (props) => {
             />
             <Typography variant="body1" component="p">
                 V
+            </Typography>
+            <TextField
+                className="device-amp-txtfld"
+                type="number"
+                placeholder="Amperes"
+                value={amps}
+                onChange={(event) => setAmps(event.target.value)}
+            />
+            <Typography variant="body1" component="p">
+                Amps
             </Typography>
             <TextField
                 className="device-usage-txtfld"
