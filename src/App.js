@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Button,
     createTheme,
@@ -26,6 +26,13 @@ const theme = createTheme({
 
 function App() {
     const [active, setActive] = useState("home");
+
+    // check the url to see which nav button needs to be shown as active
+    useEffect(() => {
+        if (window.location.pathname === "/") setActive("home");
+        else setActive("calculator");
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [window.location.pathname]);
 
     return (
         <Router>

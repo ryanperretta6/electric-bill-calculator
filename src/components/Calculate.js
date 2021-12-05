@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DeviceInput from "./DeviceInput";
+import { HelpOutlineRounded } from "@material-ui/icons";
 import {
     Button,
+    Icon,
     MenuItem,
     Select,
     TextField,
@@ -10,6 +12,8 @@ import {
 // eslint-disable-next-line no-unused-vars
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import currencies from "../data/currencies";
+import Popup from "reactjs-popup";
+import "reactjs-popup/dist/index.css";
 
 const Calculate = () => {
     const [selectedCurrency, setSelectedCurrency] = useState("USD");
@@ -49,6 +53,12 @@ const Calculate = () => {
             />
         );
         setDeviceInputs(cpyList(newDeviceInputs));
+    };
+
+    const getCurrencySymbol = (value) => {
+        for (let curr of currencies) {
+            if (curr.value === value) return curr.symbol;
+        }
     };
 
     const [deviceInputs, setDeviceInputs] = useState([
@@ -95,9 +105,26 @@ const Calculate = () => {
         setDeviceInputs(cpyList(deviceInputs.slice(0, -1)));
     };
 
+    const checkValidInputs = (deviceInput) => {
+        if (
+            !kwhRef.value ||
+            isNaN(parseFloat(kwhRef.value)) ||
+            !parseFloat(kwhRef.value) > 0
+        )
+            return false;
+    };
+
     const getAllInfo = () => {
-        let newDataLists = cpyObj(dataLists);
+        let newDataLists = {
+            deviceNames: [],
+            voltageValues: [],
+            ampValues: [],
+            usageValues: [],
+            unitValues: [],
+            perValues: [],
+        };
         for (let i in deviceInputs) {
+            checkValidInputs();
             newDataLists.deviceNames.push(deviceInputs[i].props.currData.name);
             newDataLists.voltageValues.push(
                 deviceInputs[i].props.currData.voltage
@@ -112,7 +139,6 @@ const Calculate = () => {
             );
         }
 
-        console.log(newDataLists);
         setDataLists(newDataLists);
     };
 
@@ -131,6 +157,24 @@ const Calculate = () => {
                 <Typography variant="h4" component="h2">
                     Enter your kilowatt-hour cost:
                 </Typography>
+                <Popup
+                    trigger={
+                        <button>
+                            <Icon color="secondary" className="help-icon">
+                                <HelpOutlineRounded />
+                            </Icon>
+                        </button>
+                    }
+                    position="right center"
+                    contentStyle={{ padding: "10px" }}
+                >
+                    <p>
+                        This is the Kilowatt-hour cost per{" "}
+                        <b>{getCurrencySymbol(selectedCurrency)}</b>. It can be
+                        found by asking your energy provider or lease agreement.
+                    </p>
+                </Popup>
+                <br />
                 <TextField
                     placeholder="kwHr Cost"
                     id="kwhr-txtfld"
@@ -154,15 +198,37 @@ const Calculate = () => {
                 <Typography variant="h4" component="h2">
                     Enter your device information below:
                 </Typography>
+                <Popup
+                    trigger={
+                        <button>
+                            <Icon color="secondary" className="help-icon">
+                                <HelpOutlineRounded />
+                            </Icon>
+                        </button>
+                    }
+                    position="right center"
+                    contentStyle={{
+                        padding: "10px",
+                        width: "300px",
+                    }}
+                >
+                    <p>
+                        Look for a sticker on your device like below, the
+                        voltage is typically denoted with a V and the amps with
+                        an A:
+                    </p>
+                    <img
+                        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fus.v-cdn.net%2F6024911%2Fuploads%2Fattachments%2F13022%2F6920.jpg&f=1&nofb=1"
+                        alt="voltage and amp sticker example"
+                        width="100%"
+                        height="100%"
+                    />
+                </Popup>
                 <ol id="device-inputs-list">
                     {/* Will likely have to save the current inputs before removing an input
                     and repopulate reloaded inputs using the defaultValue attr */}
                     {deviceInputs.map((deviceInput) => {
-                        return (
-                            <li className="removable-device-input">
-                                {deviceInput}
-                            </li>
-                        );
+                        return <li>{deviceInput}</li>;
                     })}
                 </ol>
                 <Typography
@@ -274,11 +340,17 @@ const Results = (props) => {
     let wattageValues = getAllWattage();
     const combinedKwhCost = getCombinedCost();
 
+    const getCurrencySymbol = (value) => {
+        for (let curr of currencies) {
+            if (curr.value === value) return curr.symbol;
+        }
+    };
+
     return (
         <div className="results">
             <Typography>
+                {getCurrencySymbol(currency)}
                 {combinedKwhCost}
-                {currency}
             </Typography>
         </div>
     );
