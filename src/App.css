@@ -138,6 +138,10 @@ h2 {
     width: 70px;
 }
 
+#error {
+    color: #f50000;
+}
+
 #calculate-button {
     margin: 10px;
     display: block;

@@ -27,6 +27,7 @@ const Calculate = () => {
         unitValues: [],
         perValues: [],
     });
+    const [showError, setShowError] = useState(false);
 
     const cpyList = (list) => {
         let newList = [];
@@ -109,9 +110,22 @@ const Calculate = () => {
         if (
             !kwhRef.value ||
             isNaN(parseFloat(kwhRef.value)) ||
-            !parseFloat(kwhRef.value) > 0
-        )
+            !parseFloat(kwhRef.value) > 0 ||
+            !deviceInput.name ||
+            deviceInput.name.trim().length === 0 ||
+            !deviceInput.voltage ||
+            isNaN(parseFloat(deviceInput.voltage)) ||
+            !parseFloat(deviceInput.voltage) > 0 ||
+            !deviceInput.amps ||
+            isNaN(parseFloat(deviceInput.amps)) ||
+            !parseFloat(deviceInput.amps) > 0 ||
+            !deviceInput.usage ||
+            isNaN(parseFloat(deviceInput.usage)) ||
+            !parseFloat(deviceInput.usage) > 0
+        ) {
             return false;
+        }
+        return true;
     };
 
     const getAllInfo = () => {
@@ -124,7 +138,12 @@ const Calculate = () => {
             perValues: [],
         };
         for (let i in deviceInputs) {
-            checkValidInputs();
+            if (!checkValidInputs(deviceInputs[i].props.currData)) {
+                console.log("here");
+                setShowError(true);
+                setShowResults(false);
+                return;
+            }
             newDataLists.deviceNames.push(deviceInputs[i].props.currData.name);
             newDataLists.voltageValues.push(
                 deviceInputs[i].props.currData.voltage
@@ -139,18 +158,11 @@ const Calculate = () => {
             );
         }
 
+        setShowError(false);
+        setShowResults(!showResults);
         setDataLists(newDataLists);
     };
 
-    // const getCurrencyOptions = () => {
-    //     let currencyOptions = [];
-    //     let count = 0;
-    //     for (let currency in currencies) {
-    //         currencyOptions.push(
-    //             <option value={currency.value}>{currency.symbol}</option>
-    //         );
-    //     }
-    // };
     return (
         <div className="calculate">
             <div className="kwhr-input-container">
@@ -253,13 +265,15 @@ const Calculate = () => {
                     id="calculate-button"
                     variant="contained"
                     color="primary"
-                    onClick={() => {
-                        setShowResults(!showResults);
-                        getAllInfo();
-                    }}
+                    onClick={getAllInfo}
                 >
                     {showResults ? "Do it again?" : "Calculate!"}
                 </Button>
+                {showError ? (
+                    <Typography id="error" variant="body1" component="p">
+                        Please make sure all inputs are valid.
+                    </Typography>
+                ) : null}
                 {showResults ? (
                     <Results
                         kwh={kwhRef.value}
@@ -350,7 +364,7 @@ const Results = (props) => {
         <div className="results">
             <Typography>
                 {getCurrencySymbol(currency)}
-                {combinedKwhCost}
+                {combinedKwhCost < 0.01 ? 0.01 : combinedKwhCost.toFixed(2)}
             </Typography>
         </div>
     );
