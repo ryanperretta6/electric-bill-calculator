@@ -441,7 +441,10 @@ const Results = (props) => {
                 </Typography>
                 <Typography variant="body1" component="p">
                     <b>Estimated amount:</b> {getCurrencySymbol(currency)}
-                    {combinedKwhCost < 0.01 ? 0.01 : combinedKwhCost.toFixed(2)}
+                    {combinedKwhCost < 0.01
+                        ? 0.01
+                        : combinedKwhCost.toFixed(2)}{" "}
+                    per month
                 </Typography>
                 <PieChart chartData={chartData} />
             </div>

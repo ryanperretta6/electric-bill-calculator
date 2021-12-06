@@ -40,7 +40,7 @@ const BreakdownTable = (props) => {
                                 <b>Usage</b>
                             </TableCell>
                             <TableCell align="right">
-                                <b>Cost({props.currency})</b>
+                                <b>Cost({props.currency}/month)</b>
                             </TableCell>
                         </TableRow>
                     </TableHead>
