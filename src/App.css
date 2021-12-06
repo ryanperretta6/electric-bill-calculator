@@ -138,6 +138,27 @@ h2 {
     width: 70px;
 }
 
+.input-container,
+.results {
+    display: inline-block;
+}
+
+.results {
+    position: fixed;
+    top: 150px;
+    left: 800px;
+    margin-left: 50px;
+}
+
+.table {
+    width: 50%;
+}
+
+#title {
+    text-align: center;
+    font-weight: bold;
+}
+
 .pie-chart {
     width: 400px;
     height: 400px;

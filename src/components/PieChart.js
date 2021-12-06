@@ -6,7 +6,10 @@ const PieChart = (props) => {
         let legendValues = [];
         for (let i in props.chartData.labels) {
             legendValues.push(
-                <div className="legend-item">
+                <div
+                    className="legend-item"
+                    style={{ display: "inline-block" }}
+                >
                     <div
                         className="legend-color-box"
                         style={{
@@ -20,6 +23,9 @@ const PieChart = (props) => {
                     <p>{props.chartData.labels[i]}</p>
                 </div>
             );
+            if (i % 2 !== 0) {
+                legendValues.push(<br />);
+            }
         }
         return legendValues;
     };
@@ -36,6 +42,9 @@ const PieChart = (props) => {
                 </Typography>
                 {createLegend()}
             </div>
+            <Typography variant="h6" component="h3" id="title">
+                Cost Breakdown by Appliance
+            </Typography>
             <Pie
                 data={props.chartData}
                 plugins={{

@@ -16,6 +16,7 @@ import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import PieChart from "./PieChart";
 import { Chart, ArcElement } from "chart.js";
+import BreakdownTable from "./Table";
 Chart.register(ArcElement);
 
 const Calculate = () => {
@@ -39,13 +40,13 @@ const Calculate = () => {
         }
         return newList;
     };
-    const cpyObj = (obj) => {
-        let newObj = {};
-        for (let key in obj) {
-            newObj[key] = obj[key];
-        }
-        return newObj;
-    };
+    // const cpyObj = (obj) => {
+    //     let newObj = {};
+    //     for (let key in obj) {
+    //         newObj[key] = obj[key];
+    //     }
+    //     return newObj;
+    // };
 
     const handleOnChange = (newInputData, ind) => {
         let newDeviceInputs = deviceInputs;
@@ -167,128 +168,131 @@ const Calculate = () => {
 
     return (
         <div className="calculate">
-            <div className="kwhr-input-container">
-                <Typography variant="h4" component="h2">
-                    Enter your kilowatt-hour cost:
-                </Typography>
-                <Popup
-                    trigger={
-                        <button>
-                            <Icon color="secondary" className="help-icon">
-                                <HelpOutlineRounded />
-                            </Icon>
-                        </button>
-                    }
-                    position="right center"
-                    contentStyle={{ padding: "10px" }}
-                >
-                    <p>
-                        This is the Kilowatt-hour cost per{" "}
-                        <b>{getCurrencySymbol(selectedCurrency)}</b>. It can be
-                        found by asking your energy provider or lease agreement.
-                    </p>
-                </Popup>
-                <br />
-                <TextField
-                    placeholder="kwHr Cost"
-                    id="kwhr-txtfld"
-                    inputRef={(ref) => setKwhRef(ref)}
-                    type="number"
-                />
-                <Select
-                    value={selectedCurrency}
-                    onChange={(event) =>
-                        setSelectedCurrency(event.target.value)
-                    }
-                >
-                    {currencies.map((currency) => (
-                        <MenuItem value={currency.value}>
-                            {currency.symbol}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </div>
-            <div className="device-inputs-container">
-                <Typography variant="h4" component="h2">
-                    Enter your device information below:
-                </Typography>
-                <Popup
-                    trigger={
-                        <button>
-                            <Icon color="secondary" className="help-icon">
-                                <HelpOutlineRounded />
-                            </Icon>
-                        </button>
-                    }
-                    position="right center"
-                    contentStyle={{
-                        padding: "10px",
-                        width: "300px",
-                    }}
-                >
-                    <p>
-                        Look for a sticker on your device like below, the
-                        voltage is typically denoted with a V and the amps with
-                        an A:
-                    </p>
-                    <img
-                        src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fus.v-cdn.net%2F6024911%2Fuploads%2Fattachments%2F13022%2F6920.jpg&f=1&nofb=1"
-                        alt="voltage and amp sticker example"
-                        width="100%"
-                        height="100%"
+            <div className="input-container">
+                <div className="kwhr-input-container">
+                    <Typography variant="h4" component="h2">
+                        Enter your kilowatt-hour cost:
+                    </Typography>
+                    <Popup
+                        trigger={
+                            <button>
+                                <Icon color="secondary" className="help-icon">
+                                    <HelpOutlineRounded />
+                                </Icon>
+                            </button>
+                        }
+                        position="right center"
+                        contentStyle={{ padding: "10px" }}
+                    >
+                        <p>
+                            This is the Kilowatt-hour cost per{" "}
+                            <b>{getCurrencySymbol(selectedCurrency)}</b>. It can
+                            be found by asking your energy provider or lease
+                            agreement.
+                        </p>
+                    </Popup>
+                    <br />
+                    <TextField
+                        placeholder="kwHr Cost"
+                        id="kwhr-txtfld"
+                        inputRef={(ref) => setKwhRef(ref)}
+                        type="number"
                     />
-                </Popup>
-                <ol id="device-inputs-list">
-                    {/* Will likely have to save the current inputs before removing an input
+                    <Select
+                        value={selectedCurrency}
+                        onChange={(event) =>
+                            setSelectedCurrency(event.target.value)
+                        }
+                    >
+                        {currencies.map((currency) => (
+                            <MenuItem value={currency.value}>
+                                {currency.symbol}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </div>
+                <div className="device-inputs-container">
+                    <Typography variant="h4" component="h2">
+                        Enter your device information below:
+                    </Typography>
+                    <Popup
+                        trigger={
+                            <button>
+                                <Icon color="secondary" className="help-icon">
+                                    <HelpOutlineRounded />
+                                </Icon>
+                            </button>
+                        }
+                        position="right center"
+                        contentStyle={{
+                            padding: "10px",
+                            width: "300px",
+                        }}
+                    >
+                        <p>
+                            Look for a sticker on your device like below, the
+                            voltage is typically denoted with a V and the amps
+                            with an A:
+                        </p>
+                        <img
+                            src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fus.v-cdn.net%2F6024911%2Fuploads%2Fattachments%2F13022%2F6920.jpg&f=1&nofb=1"
+                            alt="voltage and amp sticker example"
+                            width="100%"
+                            height="100%"
+                        />
+                    </Popup>
+                    <ol id="device-inputs-list">
+                        {/* Will likely have to save the current inputs before removing an input
                     and repopulate reloaded inputs using the defaultValue attr */}
-                    {deviceInputs.map((deviceInput) => {
-                        return <li>{deviceInput}</li>;
-                    })}
-                </ol>
-                <Typography
-                    id="add-device"
-                    variant="body1"
-                    component="p"
-                    onClick={handleAddDeviceInput}
-                >
-                    + add new device
-                </Typography>
-                {deviceInputs.length > 1 ? (
+                        {deviceInputs.map((deviceInput) => {
+                            return <li>{deviceInput}</li>;
+                        })}
+                    </ol>
                     <Typography
-                        className="remove-device-input-button"
+                        id="add-device"
                         variant="body1"
                         component="p"
-                        onClick={() => handleRemoveDeviceInput()}
+                        onClick={handleAddDeviceInput}
                     >
-                        remove
+                        + add new device
                     </Typography>
-                ) : null}
-                <Button
-                    id="calculate-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={getAllInfo}
-                >
-                    <b>{showResults ? "Do it again" : "Calculate!"}</b>
-                </Button>
-                {showError ? (
-                    <Typography id="error" variant="body1" component="p">
-                        Please make sure all inputs are valid.
-                    </Typography>
-                ) : null}
-                {showResults ? (
-                    <Results
-                        kwh={kwhRef.value}
-                        currency={selectedCurrency}
-                        deviceNames={dataLists.deviceNames}
-                        voltageValues={dataLists.voltageValues}
-                        ampValues={dataLists.ampValues}
-                        usageValues={dataLists.usageValues}
-                        perValues={dataLists.perValues}
-                        unitValues={dataLists.unitValues}
-                    />
-                ) : null}
+                    {deviceInputs.length > 1 ? (
+                        <Typography
+                            className="remove-device-input-button"
+                            variant="body1"
+                            component="p"
+                            onClick={() => handleRemoveDeviceInput()}
+                        >
+                            remove
+                        </Typography>
+                    ) : null}
+                    <Button
+                        id="calculate-button"
+                        variant="contained"
+                        color="primary"
+                        onClick={getAllInfo}
+                    >
+                        <b>{showResults ? "Do it again" : "Calculate!"}</b>
+                    </Button>
+                    {showError ? (
+                        <Typography id="error" variant="body1" component="p">
+                            Please make sure all inputs are valid.
+                        </Typography>
+                    ) : null}
+                </div>
             </div>
+            {showResults ? (
+                <Results
+                    kwh={kwhRef.value}
+                    currency={selectedCurrency}
+                    deviceNames={dataLists.deviceNames}
+                    voltageValues={dataLists.voltageValues}
+                    ampValues={dataLists.ampValues}
+                    usageValues={dataLists.usageValues}
+                    perValues={dataLists.perValues}
+                    unitValues={dataLists.unitValues}
+                />
+            ) : null}
         </div>
     );
 };
@@ -430,12 +434,26 @@ const Results = (props) => {
     };
 
     return (
-        <div className="results">
-            <Typography>
-                {getCurrencySymbol(currency)}
-                {combinedKwhCost < 0.01 ? 0.01 : combinedKwhCost.toFixed(2)}
-            </Typography>
-            <PieChart chartData={chartData} />
+        <div className="results-container">
+            <div className="results">
+                <Typography variant="h5" component="h2">
+                    <u>Results:</u>
+                </Typography>
+                <Typography variant="body1" component="p">
+                    <b>Estimated amount:</b> {getCurrencySymbol(currency)}
+                    {combinedKwhCost < 0.01 ? 0.01 : combinedKwhCost.toFixed(2)}
+                </Typography>
+                <PieChart chartData={chartData} />
+            </div>
+            <BreakdownTable
+                id="breakdown-table"
+                currency={getCurrencySymbol(currency)}
+                costValues={costValues}
+                deviceNames={deviceNames}
+                usageValues={usageValues}
+                unitValues={unitValues}
+                perValues={perValues}
+            />
         </div>
     );
 };
