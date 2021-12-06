@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import DeviceInput from "./DeviceInput";
 import { HelpOutlineRounded } from "@material-ui/icons";
 import {
@@ -14,6 +14,9 @@ import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import currencies from "../data/currencies";
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
+import PieChart from "./PieChart";
+import { Chart, ArcElement } from "chart.js";
+Chart.register(ArcElement);
 
 const Calculate = () => {
     const [selectedCurrency, setSelectedCurrency] = useState("USD");
@@ -139,7 +142,6 @@ const Calculate = () => {
         };
         for (let i in deviceInputs) {
             if (!checkValidInputs(deviceInputs[i].props.currData)) {
-                console.log("here");
                 setShowError(true);
                 setShowResults(false);
                 return;
@@ -267,7 +269,7 @@ const Calculate = () => {
                     color="primary"
                     onClick={getAllInfo}
                 >
-                    {showResults ? "Do it again?" : "Calculate!"}
+                    <b>{showResults ? "Do it again" : "Calculate!"}</b>
                 </Button>
                 {showError ? (
                     <Typography id="error" variant="body1" component="p">
@@ -338,15 +340,43 @@ const Results = (props) => {
         }
         return wattageValues;
     };
+
+    let costValues = [];
+    let topNineDevices = [];
+    let otherDevices = [];
+    let otherDevicesCost = 0;
+
     const getCombinedCost = () => {
         let kwhCost = 0;
         for (let i in wattageValues) {
-            kwhCost +=
+            let cost =
                 kwhCostValue *
                 ((wattageValues[i] *
                     convertToHrs(usageValues[i], perValues[i], unitValues[i])) /
                     1000);
+            kwhCost += cost;
+            costValues.push(cost);
         }
+
+        // get top 9 costs by deviceName
+        const sortedCostValues = costValues.slice();
+        sortedCostValues.sort((a, b) => b - a);
+        for (let i in deviceNames) {
+            if (
+                sortedCostValues.indexOf(costValues[i]) < 9 &&
+                topNineDevices.length !== 9
+            ) {
+                topNineDevices.push(deviceNames[i]);
+            } else {
+                otherDevices.push(deviceNames[i]);
+            }
+        }
+        topNineDevices.push("Other");
+
+        for (let deviceName of otherDevices) {
+            otherDevicesCost += costValues[deviceNames.indexOf(deviceName)];
+        }
+
         return kwhCost;
     };
 
@@ -360,12 +390,52 @@ const Results = (props) => {
         }
     };
 
+    const getTopVals = () => {
+        let topNineCosts = [];
+        for (let deviceName of topNineDevices) {
+            if (deviceName === "Other") continue;
+            topNineCosts.push(costValues[deviceNames.indexOf(deviceName)]);
+        }
+        // add the other cost
+        topNineCosts.push(otherDevicesCost);
+
+        return topNineCosts;
+    };
+
+    const colors = [
+        "#fff100",
+        "#e81123",
+        "#68217a",
+        "#00bcf2",
+        "#009e49",
+        "#ec008c",
+        "#ff8c00",
+        "#bad80a",
+        "#00b294",
+        "#00188f",
+    ];
+
+    const chartData = {
+        labels: costValues.length <= 10 ? deviceNames : topNineDevices,
+        datasets: [
+            {
+                label: `Cost in ${getCurrencySymbol(currency)}`,
+                data: costValues.length <= 10 ? costValues : getTopVals(),
+                backgroundColor: colors.slice(
+                    0,
+                    costValues.length < 10 ? costValues.length : 10
+                ),
+            },
+        ],
+    };
+
     return (
         <div className="results">
             <Typography>
                 {getCurrencySymbol(currency)}
                 {combinedKwhCost < 0.01 ? 0.01 : combinedKwhCost.toFixed(2)}
             </Typography>
+            <PieChart chartData={chartData} />
         </div>
     );
 };

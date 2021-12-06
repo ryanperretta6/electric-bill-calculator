@@ -138,6 +138,18 @@ h2 {
     width: 70px;
 }
 
+.pie-chart {
+    width: 400px;
+    height: 400px;
+    padding: 30px;
+    margin-bottom: 100px;
+}
+
+.legend-item * {
+    display: inline-block;
+    margin: 0px 5px;
+}
+
 #error {
     color: #f50000;
 }
