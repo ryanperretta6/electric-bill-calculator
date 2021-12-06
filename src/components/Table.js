@@ -8,19 +8,6 @@ import {
 } from "@material-ui/core";
 
 const BreakdownTable = (props) => {
-    const getUsageComponents = () => {
-        let usageComponents = [];
-        for (let i in props.usageValues) {
-            usageComponents.push(
-                <TableCell>
-                    {props.usageValues[i]}
-                    {props.unitValues[i]}/{props.perValues[i]}
-                </TableCell>
-            );
-        }
-        return usageComponents;
-    };
-
     const getRows = () => {
         let rowComponents = [];
         for (let i in props.deviceNames) {
